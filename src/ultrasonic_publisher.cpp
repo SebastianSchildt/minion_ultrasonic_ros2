@@ -26,8 +26,16 @@ using namespace std::chrono_literals;
 UltrasonicPublisher::UltrasonicPublisher() : Node("minion_ultrasonic")
   {
     publisher_ = this->create_publisher<sensor_msgs::msg::Range>("ultrasonic_range", 10);
-    sensor=new USSMeasurement(31,30);
-    //sensor=new USSMeasurement(_trig_pin,_echo_pin);
+    this->declare_parameter<int>("trigger_pin", 31);
+    this->declare_parameter<int>("echo_pin", 30);
+
+    this->get_parameter("trigger_pin", this->_trig_pin);
+    this->get_parameter("echo_pin", this->_echo_pin);
+    RCLCPP_INFO(this->get_logger(), "Using trigger pin %i and echo pin %i", this->_trig_pin,this->_echo_pin);
+
+
+//    sensor=new USSMeasurement(31,30);
+    sensor=new USSMeasurement(_trig_pin,_echo_pin);
     timer_ = this->create_wall_timer(
       200ms, std::bind(&UltrasonicPublisher::timer_callback, this));
   }
@@ -43,7 +51,7 @@ void UltrasonicPublisher::timer_callback()
     if (msg.range == -1.0) {//no detection {
       msg.range = std::numeric_limits<float>::infinity();
     }
-    RCLCPP_INFO(this->get_logger(), "Publishing: '%f'", msg.range);
+    RCLCPP_DEBUG(this->get_logger(), "Publishing: '%f'", msg.range);
     publisher_->publish(msg);
   }
 

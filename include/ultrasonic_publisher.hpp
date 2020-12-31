@@ -12,8 +12,8 @@ public:
 
 private:
   USSMeasurement *sensor;
-  uint32_t _trig_pin=31;
-  uint32_t _echo_pin=30;
+  uint32_t _trig_pin;
+  uint32_t _echo_pin;
   void timer_callback();
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr publisher_;
