@@ -27,6 +27,8 @@ set(ULTRASONIC_SOURCES
 )
 
 add_executable(minion_ultrasonic  ${ULTRASONIC_SOURCES})
+
+target_include_directories(minion_ultrasonic PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries (minion_ultrasonic   ${Boost_LIBRARIES} ${WIRINGPI_LIBRARIES})
 target_link_libraries(minion_ultrasonic  crypt rt)
 
