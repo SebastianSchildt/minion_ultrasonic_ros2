@@ -11,8 +11,8 @@ find_package(Boost COMPONENTS thread chrono REQUIRED)
 
 
 set(ULTRASONIC_SOURCES
-   src/main.cpp
-   src/measurement.cpp
+   ../src/main.cpp
+   ../src/measurement.cpp
 )
 
 add_executable (ultrasonic  ${ULTRASONIC_SOURCES} )

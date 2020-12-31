@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(minion_ultrsonic)
+project(minion_ultrasonic)
 
 
 # Default to C++14
@@ -18,11 +18,22 @@ find_package(common_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-add_executable(minion_ultrsonic src/publisher_member_function.cpp)
-ament_target_dependencies(minion_ultrsonic rclcpp std_msgs sensor_msgs)
+find_library(WIRINGPI_LIBRARIES NAMES wiringPi REQUIRED)
+find_package(Boost COMPONENTS thread chrono REQUIRED)
+
+set(ULTRASONIC_SOURCES
+   src/ultrasonic_publisher.cpp
+   src/measurement.cpp
+)
+
+add_executable(minion_ultrasonic  ${ULTRASONIC_SOURCES})
+target_link_libraries (minion_ultrasonic   ${Boost_LIBRARIES} ${WIRINGPI_LIBRARIES})
+target_link_libraries(minion_ultrasonic  crypt rt)
+
+ament_target_dependencies(minion_ultrasonic rclcpp std_msgs sensor_msgs)
 
 install(TARGETS
-  minion_ultrsonic
+  minion_ultrasonic
   DESTINATION lib/${PROJECT_NAME})
 
 

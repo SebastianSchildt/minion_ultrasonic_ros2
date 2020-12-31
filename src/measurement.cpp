@@ -7,7 +7,7 @@
 #include <wiringPi.h>
 
 
-USSMeasurement::USSMeasurement(uint32_t trig_pin, int32_t echo_pin) : _echo_pin(echo_pin), _trig_pin(trig_pin) {
+USSMeasurement::USSMeasurement(uint32_t trig_pin, int32_t echo_pin) :  _trig_pin(trig_pin), _echo_pin(echo_pin) {
     std::cout << "Constructed" << std::endl;
     wiringPiSetup();
     pinMode(this->_echo_pin, INPUT);    
@@ -35,7 +35,7 @@ void USSMeasurement::sample() {
     
 
     //Wait for echo pulse, todo timeout
-    while(!digitalRead(this->_echo_pin) == 1) { //Do not hog CPU, accept slightly less precise results
+    while( digitalRead(this->_echo_pin) == 0) { //Do not hog CPU, accept slightly less precise results
           boost::this_thread::sleep_for(boost::chrono::microseconds{1});
     }
     //high pulse coming back
@@ -43,7 +43,7 @@ void USSMeasurement::sample() {
     //
 
     // wait pulse to go low
-	while(!digitalRead(this->_echo_pin) == 0) { //Do not hog CPU, accept slightly less precise results
+	while( digitalRead(this->_echo_pin) == 1) { //Do not hog CPU, accept slightly less precise results
           boost::this_thread::sleep_for(boost::chrono::microseconds{1});
     }
 
