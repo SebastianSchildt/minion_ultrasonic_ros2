@@ -1,20 +1,29 @@
-# CMakeLists files in this project can
-# refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
-# to the root binary directory of the project as ${HELLO_BINARY_DIR}.
-cmake_minimum_required (VERSION 3.12.1)
-project (Ultrasonic)
+cmake_minimum_required(VERSION 3.12)
+project(minion_ultrsonic)
 
 
-find_package(Threads REQUIRED)
-find_library(WIRINGPI_LIBRARIES NAMES wiringPi REQUIRED)
-find_package(Boost COMPONENTS thread chrono REQUIRED)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(common_interfaces REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+add_executable(minion_ultrsonic src/publisher_member_function.cpp)
+ament_target_dependencies(minion_ultrsonic rclcpp std_msgs sensor_msgs)
+
+install(TARGETS
+  minion_ultrsonic
+  DESTINATION lib/${PROJECT_NAME})
 
 
-set(ULTRASONIC_SOURCES
-   src/main.cpp
-   src/measurement.cpp
-)
-
-add_executable (ultrasonic  ${ULTRASONIC_SOURCES} )
-target_link_libraries (ultrasonic PRIVATE Threads::Threads  ${Boost_LIBRARIES} ${WIRINGPI_LIBRARIES})
-target_link_libraries(ultrasonic PRIVATE crypt rt)
+ament_package()
